@@ -52,7 +52,7 @@ class StatsView @JvmOverloads constructor(
     // данные будут приходить в види списка чисел
     var data: List<Float> = emptyList()
         set(value) {
-            field = value // обновим данные
+            field = value.map { it / value.sum() } // value // обновим данные
             // переведем данные в
             invalidate() // invalidate() спровоцирует вызов функции onDraw
         }
@@ -134,7 +134,7 @@ class StatsView @JvmOverloads constructor(
         var startAngle = - 90F
 
         // приведем значения к процентам
-        data = data.map { it / data.sum() }
+        // data = data.map { it / data.sum() }
 
 
         // обходим список элементов
