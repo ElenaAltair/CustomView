@@ -1,5 +1,9 @@
 package ru.netology.customview.ui
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -8,6 +12,9 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
+import android.widget.TextView
 import androidx.core.content.withStyledAttributes
 import ru.netology.customview.R
 import ru.netology.customview.utils.AndroidUtils
@@ -38,6 +45,9 @@ class StatsView @JvmOverloads constructor(
     private var sumAllValues = 0 // какое должно быть значение суммы всех элементов массива при 100%
     private var countSection = 4 // размер массива при 100%
 
+    private var progress = 0F
+    private var valueAnimator: ValueAnimator? = null
+
     // обработаем атрибуты, которые мы указали в разметке нашей кастомной view
     init {
         context.withStyledAttributes(attributeSet, R.styleable.StatsView) {
@@ -62,8 +72,8 @@ class StatsView @JvmOverloads constructor(
             // value.map { it / value.sum() } приведем значения к процентам
             field = value.map { it / sumAllValues } // value // обновим данные
 
-            // переведем данные в
-            invalidate() // invalidate() спровоцирует вызов функции onDraw
+            //invalidate() // invalidate() спровоцирует вызов функции onDraw
+            update()
         }
 
     // чтобы использовать область отрисовки, создадим прямоугольник типа RectF
@@ -141,7 +151,7 @@ class StatsView @JvmOverloads constructor(
 
         // определим переменную стартовый угол поворота
         // берем (- 90F), чтобы начинать отрисовку сверху
-        var startAngle = -90F
+        var startAngle = progress * 360 //-90F
 
 
         // обходим список элементов
@@ -149,7 +159,7 @@ class StatsView @JvmOverloads constructor(
             // и рассчитаем угол поворота каждого
             // умножим данные на 360, чтобы получить угол
 
-            Log.d("MyLog", "datum: $datum, data.sum(): ${data.sum()} ")
+            // Log.d("MyLog", "datum: $datum, data.sum(): ${data.sum()} ")
             val angle = (datum / data.sum()) * (360 / countSection) * data.size
             // назначим каждому элементу свой цвет (воспользуемся генерацией случайного числа)
             // расчитываем случайное число, которое находится от черного до белого цвета
@@ -160,7 +170,8 @@ class StatsView @JvmOverloads constructor(
                 colorFirst = paint.color
             }
             // отрисуем дугу
-            canvas.drawArc(oval, startAngle, angle, false, paint)
+            //canvas.drawArc(oval, startAngle, angle, false, paint)
+            canvas.drawArc(oval, startAngle, angle * progress, false, paint)
             // добавим отступ к стартовому углу поворота, чтобы не рисовать на одном месте
             startAngle += angle
         }
@@ -168,8 +179,9 @@ class StatsView @JvmOverloads constructor(
         // исправим верхний хвостик (сделаем правильной отображение на 0 часов)
         val angle = (data[0] / data.sum()) * 360 / 2
         paint.color = colorFirst
-        startAngle = -90F
-        canvas.drawArc(oval, startAngle, angle, false, paint)
+        startAngle = progress * 360  // -90F
+        //canvas.drawArc(oval, startAngle, angle, false, paint)
+        canvas.drawArc(oval, startAngle, angle * progress, false, paint)
 
         // отрисуем текст
         canvas.drawText(
@@ -185,6 +197,45 @@ class StatsView @JvmOverloads constructor(
 
     }
 
+
+    private fun update() {
+        valueAnimator?.let {
+            it.removeAllListeners()
+            it.cancel()
+        }
+        progress = 0F
+
+        // медленный рост дуг
+        valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
+            addUpdateListener { anim ->
+                progress = anim.animatedValue as Float
+                invalidate() // invalidate() спровоцирует вызов функции onDraw
+            }
+            duration = 3000
+            interpolator = LinearInterpolator()
+
+        }.also {
+            it.start()
+        }
+
+        /*
+        val arrowAnimator = ValueAnimator.ofFloat(00f, 360f).apply {
+            addUpdateListener { updatedAnimation ->
+                this@StatsView.rotation = updatedAnimation.animatedValue as Float
+            }
+            duration = 3000
+            startDelay = 250
+        }
+
+        AnimatorSet().apply {
+            playTogether(valueAnimator, arrowAnimator)
+            start()
+        }*/
+
+    }
+
     private fun generateRandomColor() = Random.nextInt(0xFF000000.toInt(), 0xFFFFFFFF.toInt())
 
 }
+
+

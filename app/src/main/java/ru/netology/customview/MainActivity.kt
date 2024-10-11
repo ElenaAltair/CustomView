@@ -1,6 +1,7 @@
 package ru.netology.customview
 
 import android.os.Bundle
+import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import ru.netology.customview.databinding.ActivityMainBinding
 
@@ -31,9 +32,9 @@ class MainActivity : AppCompatActivity() {
             500F,
         )
 
-        /*
-        val textView = binding.label
 
+        val textView = binding.label
+/*
         view.animate()
             .rotation(360F)
             .scaleX(1.2F)
