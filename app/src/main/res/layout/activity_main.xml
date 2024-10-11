@@ -17,6 +17,8 @@
         app:color2="#FFEA00"
         app:color3="#2BFF00"
         app:color4="#0073FF"
+        app:sumAllValues="2000"
+        app:countSection="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
