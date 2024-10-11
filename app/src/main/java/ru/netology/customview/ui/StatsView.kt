@@ -29,6 +29,7 @@ class StatsView @JvmOverloads constructor(
 
     // размер текста
     private var textSise = AndroidUtils.dp(context, 20).toFloat()
+
     // Ширина строки для кисти
     private var lineWith = AndroidUtils.dp(context, 5)
 
@@ -57,8 +58,10 @@ class StatsView @JvmOverloads constructor(
     // данные будут приходить в види списка чисел
     var data: List<Float> = emptyList()
         set(value) {
+
             // value.map { it / value.sum() } приведем значения к процентам
             field = value.map { it / sumAllValues } // value // обновим данные
+
             // переведем данные в
             invalidate() // invalidate() спровоцирует вызов функции onDraw
         }
@@ -69,6 +72,7 @@ class StatsView @JvmOverloads constructor(
     // расчитаем радиус
     // индикатор прогресса, который мы реализуем, должен быть в виде окружности
     private var radius = 0F
+
     // нам требуется точка центра окружности
     private var center = PointF()
 
@@ -131,15 +135,13 @@ class StatsView @JvmOverloads constructor(
         // нарисуем круг
         // canvas.drawCircle(center.x, center.y, radius, paint)
 
-        if(data.isEmpty()) {
+        if (data.isEmpty()) {
             return // если список с данными пустой, но выходим
         }
 
         // определим переменную стартовый угол поворота
         // берем (- 90F), чтобы начинать отрисовку сверху
-        var startAngle = - 90F
-
-
+        var startAngle = -90F
 
 
         // обходим список элементов
@@ -148,13 +150,13 @@ class StatsView @JvmOverloads constructor(
             // умножим данные на 360, чтобы получить угол
 
             Log.d("MyLog", "datum: $datum, data.sum(): ${data.sum()} ")
-            val angle = (datum / data.sum()) * (360/countSection) * data.size
+            val angle = (datum / data.sum()) * (360 / countSection) * data.size
             // назначим каждому элементу свой цвет (воспользуемся генерацией случайного числа)
             // расчитываем случайное число, которое находится от черного до белого цвета
 
 
             paint.color = colors.getOrElse(index) { generateRandomColor() }
-            if(index == 0 ) {
+            if (index == 0) {
                 colorFirst = paint.color
             }
             // отрисуем дугу
@@ -166,7 +168,7 @@ class StatsView @JvmOverloads constructor(
         // исправим верхний хвостик (сделаем правильной отображение на 0 часов)
         val angle = (data[0] / data.sum()) * 360 / 2
         paint.color = colorFirst
-        startAngle = - 90F
+        startAngle = -90F
         canvas.drawArc(oval, startAngle, angle, false, paint)
 
         // отрисуем текст

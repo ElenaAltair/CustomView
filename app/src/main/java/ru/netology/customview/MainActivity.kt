@@ -1,10 +1,6 @@
 package ru.netology.customview
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import ru.netology.customview.databinding.ActivityMainBinding
 
