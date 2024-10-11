@@ -34,11 +34,16 @@ class StatsView @JvmOverloads constructor(
 
     private var colors = emptyList<Int>()
 
+    private var sumAllValues = 0 // какое должно быть значение суммы всех элементов массива при 100%
+    private var countSection = 4 // размер массива при 100%
+
     // обработаем атрибуты, которые мы указали в разметке нашей кастомной view
     init {
         context.withStyledAttributes(attributeSet, R.styleable.StatsView) {
             textSise = getDimension(R.styleable.StatsView_textSize, textSise)
             lineWith = getDimension(R.styleable.StatsView_lineWidth, lineWith.toFloat()).toInt()
+            sumAllValues = getInt(R.styleable.StatsView_sumAllValues, sumAllValues)
+            countSection = getInt(R.styleable.StatsView_countSection, countSection)
             colors = listOf(
                 getColor(R.styleable.StatsView_color1, generateRandomColor()),
                 getColor(R.styleable.StatsView_color2, generateRandomColor()),
@@ -52,7 +57,8 @@ class StatsView @JvmOverloads constructor(
     // данные будут приходить в види списка чисел
     var data: List<Float> = emptyList()
         set(value) {
-            field = value // обновим данные
+            // value.map { it / value.sum() } приведем значения к процентам
+            field = value.map { it / sumAllValues } // value // обновим данные
             // переведем данные в
             invalidate() // invalidate() спровоцирует вызов функции onDraw
         }
@@ -133,8 +139,7 @@ class StatsView @JvmOverloads constructor(
         // берем (- 90F), чтобы начинать отрисовку сверху
         var startAngle = - 90F
 
-        // приведем значения к процентам
-        data = data.map { it / data.sum() }
+
 
 
         // обходим список элементов
@@ -142,8 +147,8 @@ class StatsView @JvmOverloads constructor(
             // и рассчитаем угол поворота каждого
             // умножим данные на 360, чтобы получить угол
 
-            Log.d("MyLog", "datum: $datum, data.sum(): ${data.sum()}")
-            val angle = (datum / data.sum()) * 360
+            Log.d("MyLog", "datum: $datum, data.sum(): ${data.sum()} ")
+            val angle = (datum / data.sum()) * (360/countSection) * data.size
             // назначим каждому элементу свой цвет (воспользуемся генерацией случайного числа)
             // расчитываем случайное число, которое находится от черного до белого цвета
 
