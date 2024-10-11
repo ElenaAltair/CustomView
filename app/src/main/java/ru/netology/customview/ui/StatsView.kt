@@ -179,7 +179,7 @@ class StatsView @JvmOverloads constructor(
 
         // исправим верхний хвостик (сделаем правильной отображение на 0 часов)
 
-        val angle = (data[0] / data.sum()) * (360 / countSection) * data.size
+        val angle = (data[0] / data.sum()) * (360 / countSection) * data.size / 2
         paint.color = colorFirst
         startAngle = progress * 360 // progress * 360  // -90F
         //canvas.drawArc(oval, startAngle, angle, false, paint)
