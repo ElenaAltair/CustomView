@@ -151,10 +151,11 @@ class StatsView @JvmOverloads constructor(
 
         // определим переменную стартовый угол поворота
         // берем (- 90F), чтобы начинать отрисовку сверху
-        var startAngle = progress * 360 //-90F
+        var startAngle = progress * 360 //progress * 360 //-90F
 
 
         // обходим список элементов
+
         data.forEachIndexed { index, datum ->
             // и рассчитаем угол поворота каждого
             // умножим данные на 360, чтобы получить угол
@@ -171,17 +172,19 @@ class StatsView @JvmOverloads constructor(
             }
             // отрисуем дугу
             //canvas.drawArc(oval, startAngle, angle, false, paint)
-            canvas.drawArc(oval, startAngle, angle * progress, false, paint)
+            canvas.drawArc(oval, startAngle, angle * progress , false, paint)
             // добавим отступ к стартовому углу поворота, чтобы не рисовать на одном месте
             startAngle += angle
         }
 
         // исправим верхний хвостик (сделаем правильной отображение на 0 часов)
-        val angle = (data[0] / data.sum()) * 360 / 2
+
+        val angle = (data[0] / data.sum()) * (360 / countSection) * data.size
         paint.color = colorFirst
-        startAngle = progress * 360  // -90F
+        startAngle = progress * 360 // progress * 360  // -90F
         //canvas.drawArc(oval, startAngle, angle, false, paint)
-        canvas.drawArc(oval, startAngle, angle * progress, false, paint)
+        canvas.drawArc(oval, startAngle, angle  * progress, false, paint)
+
 
         // отрисуем текст
         canvas.drawText(

@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-        val textView = binding.label
+
 /*
         view.animate()
             .rotation(360F)
@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity() {
 
         // получим доступ к информации анимации anim/animation.xml
         // Пример 1 android.view.animation
-/*
+        /*
+        val textView = binding.label
         view.startAnimation(
             AnimationUtils.loadAnimation(this, R.anim.animation).apply {
                 // у нас есть возможность прослеживать прогресс анимации
